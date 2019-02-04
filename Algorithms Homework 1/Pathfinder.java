@@ -1,4 +1,4 @@
-// Sam Gibson, Alvin Lai, Jigar Swaminarayan
+// Sam Gibson, Jigar Swaminarayan
 package pathfinder.uninformed;
 
 import java.util.*;
