@@ -1,5 +1,5 @@
 // Sam Gibson, Jigar Swaminarayan
-package pathfinder.uninformed;
+package pathfinder.informed;
 
 import java.util.*;
 import java.util.Map.Entry;
