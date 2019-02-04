@@ -30,7 +30,7 @@ public class Pathfinder {
 		frontier.add(initialState);
 
 		SearchTreeNode current = initialState;
-		ArrayList<String> path = new ArrayList<String>();
+
 		// TODO: Loop: as long as the frontier is not empty...
 		while (frontier != null) {
 			// TODO: Get the next node to expand by the ordering of breadth-first search
