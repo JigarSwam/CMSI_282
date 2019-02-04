@@ -161,7 +161,11 @@ public class MazeProblem {
     }
 
     public int getCost(MazeState state) {
-        return 0;
+        if (maze[state.row].charAt(state.col) == 'M') {
+            return 3;
+        } else {
+            return 1;
+        }
     }
 
 }
