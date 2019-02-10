@@ -1,8 +1,11 @@
 package pathfinder.informed;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Specifies the Maze Grid pathfinding problem including the actions, transitions,
@@ -15,9 +18,11 @@ public class MazeProblem {
     // -----------------------------------------------------------------------------
     private String[] maze;
     private int rows, cols;
+    private boolean foundKey;
     public final MazeState INITIAL_STATE, KEY_STATE;
     private Map<String, MazeState> goals = new HashMap<>();
     private Map<String, MazeState> mudTiles = new HashMap<>();
+    private Set<MazeState> graveyard = new HashSet<>();
     private static final Map<String, MazeState> TRANS_MAP = createTransitions();
 
     /**
@@ -90,6 +95,7 @@ public class MazeProblem {
         }
         INITIAL_STATE = foundInitial;
         KEY_STATE = foundKey;
+        this.foundKey = (KEY_STATE == null) ? true : false;
     }
 
 
@@ -132,7 +138,8 @@ public class MazeProblem {
             // map bounds and no wall at the position)...
             if (newState.row >= 0 && newState.row < rows &&
                 newState.col >= 0 && newState.col < cols &&
-                maze[newState.row].charAt(newState.col) != 'X') {
+                maze[newState.row].charAt(newState.col) != 'X' &&
+                !graveyard.contains(newState)) {
                 // ...then add it to the result!
                 result.put(action.getKey(), newState);
             }
@@ -184,11 +191,60 @@ public class MazeProblem {
       }
     }
     
-    public int estimateDistance(MazeState state, MazeState destination) {
+    public int getTotalCost(SearchTreeNode node) {
+    	int cost = 0;
+    	SearchTreeNode current = node;
+    	while(current.parent != null) {
+    		cost += getCost(current.parent.state);
+    		current = current.parent;
+    	}
+    	cost += estimateDistance(node.state);
+    	return cost;
+    }   
+    
+    private int estimateDistance(MazeState state) {
     	int distance = 0;
-    	distance += state.row - destination.row;
-    	distance += state.col - destination.col;
+    	if(foundKey) {
+    		int minDistance = 2147483647;
+    		for (Entry<String, MazeState> x : goals.entrySet()) {
+    			MazeState xMod = x.getValue();
+    			int tempDistance = state.row - xMod.row;
+    			tempDistance += state.col - xMod.col;
+    			if(tempDistance < minDistance) {
+    				minDistance = tempDistance;
+    			}
+    		}
+    		distance = minDistance;
+    	} else {
+    		distance += state.row - KEY_STATE.row;
+        	distance += state.col - KEY_STATE.col;
+    	}
+    	
     	return distance;
+    }
+    
+    public boolean isKey (MazeState state) {
+        return state.equals(KEY_STATE);
+    }
+    
+    public Map getGoals() {
+    	return goals;
+    }
+    
+    public void findKey() {
+    	foundKey = true;
+    }
+    
+    public boolean foundKey() {
+    	return foundKey;
+    }
+    
+    public void addToGraveyard(MazeState state) {
+    	graveyard.add(state);
+    }
+    
+    public void clearGraveyard() {
+    	graveyard.clear();
     }
 
 }

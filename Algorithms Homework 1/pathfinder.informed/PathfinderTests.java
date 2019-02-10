@@ -32,6 +32,7 @@ public class PathfinderTests {
 
     @Test
     public void testPathfinder_t1() {
+    	System.out.println("test 1:");
         String[] maze = {
             "XXXXXXX",
             "XI....X",
@@ -77,6 +78,43 @@ public class PathfinderTests {
         ArrayList<String> solution = Pathfinder.solve(prob);
 
         assertNull(solution); // Ensure that Pathfinder knows when there's no solution
+    }
+    
+    @Test
+    public void testPathfinder_t4() {
+        String[] maze = {
+            "XXXXXXX",
+            "X..G..X",
+            "X.MIMGX",
+            "X.XKX.X",
+            "XXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(3, result[1]); // Ensure that the solution is optimal
+    }
+    
+    @Test
+    public void testPathfinder_t5() {
+        String[] maze = {
+            "XXXXXXX",
+            "X..G..X",
+            "X.XXXXX",
+            "X.XI.XX",
+            "X.X..XX",
+            "X....XX",
+            "X.....X",
+            "XXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(11, result[1]); // Ensure that the solution is optimal
     }
 
 }
