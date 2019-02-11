@@ -147,7 +147,7 @@ public class MazeProblem {
         return result;
     }
 
-     /**
+    /**
     * Given a possibleSoln, tests to ensure that it is indeed a solution to this MazeProblem,
     * as well as returning the cost.
     *
@@ -182,6 +182,13 @@ public class MazeProblem {
        return result;
    }
 
+    /**
+     * [Description].
+     *
+     * @param state A MazeState (col, row) representing the current state
+     * from which actions can be taken
+     * @return [what it returns]
+     */
     public int getCost(MazeState state){
       if (maze[state.row].charAt(state.col) == 'M') {
         return 3;
@@ -191,6 +198,12 @@ public class MazeProblem {
       }
     }
     
+    /**
+     * [Description].
+     *
+     * @param node [what it is]
+     * @return [what it returns]
+     */
     public int getTotalCost(SearchTreeNode node) {
     	int cost = 0;
     	SearchTreeNode current = node;
@@ -202,6 +215,12 @@ public class MazeProblem {
     	return cost;
     }   
     
+    /**
+     * [Description].
+     *
+     * @param state [what it is]
+     * @return [what it returns]
+     */
     private int estimateDistance(MazeState state) {
     	int distance = 0;
     	if(foundKey) {
@@ -223,26 +242,62 @@ public class MazeProblem {
     	return distance;
     }
     
+    /**
+     * [Description].
+     *
+     * @param state [what it is]
+     * @return [what it returns]
+     */
     public boolean isKey (MazeState state) {
         return state.equals(KEY_STATE);
     }
     
+    /**
+     * [Description].
+     *
+     * @param node [what it is]
+     * @return [what it returns]
+     */
     public Map getGoals() {
     	return goals;
     }
     
+    /**
+     * [Description].
+     *
+     * @param node [what it is]
+     * @return [what it returns]
+     */
     public void findKey() {
     	foundKey = true;
     }
     
+    /**
+     * [Description].
+     *
+     * @param node [what it is]
+     * @return [what it returns]
+     */
     public boolean foundKey() {
     	return foundKey;
     }
     
+    /**
+     * [Description].
+     *
+     * @param node [what it is]
+     * @return [what it returns]
+     */
     public void addToGraveyard(MazeState state) {
     	graveyard.add(state);
     }
     
+    /**
+     * [Description].
+     *
+     * @param node [what it is]
+     * @return [what it returns]
+     */
     public void clearGraveyard() {
     	graveyard.clear();
     }

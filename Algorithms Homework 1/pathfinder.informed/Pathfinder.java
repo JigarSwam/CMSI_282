@@ -124,6 +124,12 @@ class SearchTreeNode {
 		this.parent = parent;
 	}
 
+	/**
+     * [Description].
+     *
+     * @param node [what it is]
+     * @return [what it returns]
+     */
 	public ArrayList<String> getPath() {
 		ArrayList<String> path = new ArrayList<String>();
 		path.add(this.action);
@@ -136,6 +142,12 @@ class SearchTreeNode {
 		return path;
 	}
 
+	/**
+     * [Description].
+     *
+     * @param node [what it is]
+     * @return [what it returns]
+     */
 	public int cost(MazeProblem problem) {
 		int cost = problem.getTotalCost(this);
 		return cost;
