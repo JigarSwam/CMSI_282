@@ -21,6 +21,9 @@ public class Pathfinder {
 	public static ArrayList<String> solve(MazeProblem problem) {
 		// TODO: Initialize frontier -- what data structure should you use here for
 		// breadth-first search? Recall: The frontier holds SearchTreeNodes!
+		if (problem.foundKey()) {
+			return null;
+		}
 		PriorityQueue<SearchTreeNode> frontier = new PriorityQueue<>(
 				(SearchTreeNode s1, SearchTreeNode s2) -> s1.cost(problem) - s2.cost(problem));
 
@@ -123,13 +126,12 @@ class SearchTreeNode {
 		this.action = action;
 		this.parent = parent;
 	}
-
 	/**
      * Creates an ArrayList of Strings that represents the path taken to get
-	 * to the goal state.
+	 * to the state of the node.
      *
      * @return An ArrayList of Strings representing actions that lead from the
-	 * initial to the goal state, of the format: ["R", "R", "L", ...]
+	 * initial to the state of the node, of the format: ["R", "R", "L", ...]
      */
 	public ArrayList<String> getPath() {
 		ArrayList<String> path = new ArrayList<String>();
@@ -142,13 +144,13 @@ class SearchTreeNode {
 		}
 		return path;
 	}
-
 	/**
-     * Calculates the total cost from the initial state to the goal state.
+     * Calculates the total cost from the initial state to the state of the node
+     * then estimates the remaining distance to the goal state or key state.
      *
      * @param problem A MazeProblem that specifies the maze, actions, transitions
-     * @return an integer representing the total cost of getting from the initial
-	 * to goal state.
+     * @return an integer estimating the total cost of getting from the initial
+	 * to goal state or key state.
      */
 	public int cost(MazeProblem problem) {
 		int cost = problem.getTotalCost(this);
