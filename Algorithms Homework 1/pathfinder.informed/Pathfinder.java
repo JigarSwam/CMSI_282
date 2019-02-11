@@ -125,10 +125,11 @@ class SearchTreeNode {
 	}
 
 	/**
-     * [Description].
+     * Creates an ArrayList of Strings that represents the path taken to get
+	 * to the goal state.
      *
-     * @param node [what it is]
-     * @return [what it returns]
+     * @return An ArrayList of Strings representing actions that lead from the
+	 * initial to the goal state, of the format: ["R", "R", "L", ...]
      */
 	public ArrayList<String> getPath() {
 		ArrayList<String> path = new ArrayList<String>();
@@ -143,10 +144,11 @@ class SearchTreeNode {
 	}
 
 	/**
-     * [Description].
+     * Calculates the total cost from the initial state to the goal state.
      *
-     * @param node [what it is]
-     * @return [what it returns]
+     * @param problem A MazeProblem that specifies the maze, actions, transitions
+     * @return an integer representing the total cost of getting from the initial
+	 * to goal state.
      */
 	public int cost(MazeProblem problem) {
 		int cost = problem.getTotalCost(this);
