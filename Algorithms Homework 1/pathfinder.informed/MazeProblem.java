@@ -183,11 +183,12 @@ public class MazeProblem {
    }
 
     /**
-     * [Description].
+     * Calculates the cost of a single move depending on if there is mud or not.
      *
      * @param state A MazeState (col, row) representing the current state
      * from which actions can be taken
-     * @return [what it returns]
+     * @return An integer which represents the cost of a single move depending
+     * on what the tile being landed on is.
      */
     public int getCost(MazeState state){
       if (maze[state.row].charAt(state.col) == 'M') {
@@ -199,10 +200,12 @@ public class MazeProblem {
     }
     
     /**
-     * [Description].
+     * Calculates the total cost of from a given node.
      *
-     * @param node [what it is]
-     * @return [what it returns]
+     * @param node The current MazeState, the action that *led to* this state / node,
+     * and the reference to parent SearchTreeNode in the Search Tree.
+     * @return An integer which represents the total cost of going from the
+     * intial state to the goal state.
      */
     public int getTotalCost(SearchTreeNode node) {
     	int cost = 0;
@@ -216,10 +219,13 @@ public class MazeProblem {
     }   
     
     /**
-     * [Description].
+     * Calculates the estimated distance from the intial to the goal state
+     * without taking into account mud tile costs.
      *
-     * @param state [what it is]
-     * @return [what it returns]
+     * @param state A MazeState (col, row) representing the current state
+     * from which actions can be taken.
+     * @return An integer which represents the estimated distance from the initial 
+     * state to the goal state.
      */
     private int estimateDistance(MazeState state) {
     	int distance = 0;
@@ -243,60 +249,58 @@ public class MazeProblem {
     }
     
     /**
-     * [Description].
+     * Determines if the current state is a key or not a key.
      *
-     * @param state [what it is]
-     * @return [what it returns]
+     * @param state A MazeState (col, row) representing the current state
+     * from which actions can be taken.
+     * @return Returns true if the current state is a key, false if it is not.
      */
     public boolean isKey (MazeState state) {
         return state.equals(KEY_STATE);
     }
     
     /**
-     * [Description].
+     * Getter to see the goal states.
      *
-     * @param node [what it is]
-     * @return [what it returns]
+     * @param node The current MazeState, the action that *led to* this state / node,
+     * and the reference to parent SearchTreeNode in the Search Tree.
+     * @return A set that has the location of the goal states.
      */
     public Map getGoals() {
     	return goals;
     }
     
     /**
-     * [Description].
-     *
-     * @param node [what it is]
-     * @return [what it returns]
+     * Signifies that the key has been found.
      */
     public void findKey() {
     	foundKey = true;
     }
     
     /**
-     * [Description].
+     * Determines if whether or not the key as been found.
      *
-     * @param node [what it is]
-     * @return [what it returns]
+     * @return true if the key is found and false if it is not.
      */
     public boolean foundKey() {
     	return foundKey;
     }
     
     /**
-     * [Description].
+     * Adds the given state to a set which contains the traversed states.
      *
-     * @param node [what it is]
-     * @return [what it returns]
+     * @param state A MazeState (col, row) representing the current state
+     * from which actions can be taken.
      */
     public void addToGraveyard(MazeState state) {
     	graveyard.add(state);
     }
     
     /**
-     * [Description].
+     * Empties the graveyard set.
      *
-     * @param node [what it is]
-     * @return [what it returns]
+     * @param node The current MazeState, the action that *led to* this state / node,
+     * and the reference to parent SearchTreeNode in the Search Tree.
      */
     public void clearGraveyard() {
     	graveyard.clear();
