@@ -28,7 +28,7 @@ public class Pathfinder {
     	SearchTreeNode initialState = new SearchTreeNode(problem.INITIAL_STATE, null, null);
     	frontier.add(initialState);
     	
-    	SearchTreeNode current = initialState;
+    	// SearchTreeNode current = initialState;
         
         // TODO: Loop: as long as the frontier is not empty...
     	while (frontier != null) {
