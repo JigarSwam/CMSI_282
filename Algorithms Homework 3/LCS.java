@@ -20,7 +20,7 @@ public class LCS {
 
 	// [!] TODO: Add your shared helper methods here!
 	
-	// TODO: FINISH!
+	// TODO: COMPLETE AS OF NOW
 	private Set<String> collectSolution(String rStr, int r, String cStr, int c, int[][] memo) {
 		
 		Set<String> result = new HashSet<String>();
@@ -49,17 +49,21 @@ public class LCS {
 		return result;
 	}
 
-	// decides if to use BU or TD
-	private void executeLCS(boolean topDown, int[][] table) {
+	// [!] TODO: NEED TO COMPLETE | decides if to use BU or TD
+	private static Set<String> executeLCS(boolean topDown, int[][] table) {
 		// if true --> top down
-		// else --> bottom up
+		if (topDown) {
+			// topDownFill();
+		} else {
+			// bottomUpFill();
+			// collectSolution();
+		}
 		throw new UnsupportedOperationException();
 		// fill the table either bottom-up or top-down
 		// use answer retrieval helper -- collectSolution
 	}
 	
-	// [!] TODO: getSolution helper and call it in executeLCS, addLetter helper
-	
+	// [!] TODO: COMPLETE AS OF NOW | getSolution helper and call it in executeLCS, addLetter helper	
 	private Set<String> addLetter(char letter, Set<String> currentResults) {
 		Set<String> withAddedLetter = new HashSet<String>();
 		for (String s : currentResults) {
@@ -82,14 +86,16 @@ public class LCS {
 	 * @return The longest common subsequence between rStr and cStr + [Side Effect]
 	 *         sets memoCheck to refer to table
 	 */
+	
+	// [!] TODO: NEED TO COMPLETE 
 	public static Set<String> bottomUpLCS(String rStr, String cStr) {
-		// executeLCS();	
+		executeLCS(false, memoCheck);
 		throw new UnsupportedOperationException();
 	}
 
 	// [!] TODO: Add any bottom-up specific helpers here!
 
-	// populates memoization table [Done for now]
+	// [!] TODO: COMPLETE AS OF NOW | populates memoization table [Done for now]
 	private static int[][] bottomUpFillTable(String rStr, String cStr) {
 
 		int[][] table = new int[rStr.length()][cStr.length()];
@@ -123,6 +129,8 @@ public class LCS {
 	 * @return The longest common subsequence between rStr and cStr + [Side Effect]
 	 *         sets memoCheck to refer to table
 	 */
+	
+	// [!] TODO: NEED TO COMPLETE 
 	public static Set<String> topDownLCS(String rStr, String cStr) {
 		// one line call executeLCS
 		throw new UnsupportedOperationException();
@@ -130,7 +138,7 @@ public class LCS {
 
 	// [!] TODO: Add any top-down specific helpers here!
 
-	// Populates memoization table
+	// [!] TODO: NEED TO COMPLETE | Populates memoization table
 	private int[][] topDownFillTable(String rStr, int r, String cStr, int c, int[][] table) {
 		// memoize this with 2D boolean array
 		table = new int[rStr.length()][cStr.length()];
