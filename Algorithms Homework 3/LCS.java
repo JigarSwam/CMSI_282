@@ -1,3 +1,4 @@
+// Jigar Swaminarayan
 package lcs;
 
 import java.util.Arrays;
@@ -10,61 +11,58 @@ public class LCS {
 	/**
 	 * memoCheck is used to verify the state of your tabulation after performing
 	 * bottom-up and top-down DP. Make sure to set it after calling either one of
-	 * topDownLCS or bottomUpLCS to pass the tests!
+	 * topDownLCS or bottomUpLCS to pass the tests!2
 	 */
 	public static int[][] memoCheck;
 
 	// -----------------------------------------------
 	// Shared Helper Methods
 	// -----------------------------------------------
-
-	// [!] TODO: Add your shared helper methods here!
 	
-	// TODO: COMPLETE AS OF NOW
-	private Set<String> collectSolution(String rStr, int r, String cStr, int c, int[][] memo) {
-		
-		Set<String> result = new HashSet<String>();
-		
+	private static Set<String> collectSolution(String rStr, int r, String cStr, int c, int[][] memo) {
 		// Base Case: If gutter reached
 		if (r == 0 || c == 0) {
+			Set<String> result = new HashSet<String>();
 			result.add("");
 			return result;
 		}
 		// Recursive Case 1: Matched Letters
-		if (rStr.charAt(r) == cStr.charAt(c)) {
-			result = collectSolution(rStr, r-1, cStr, c-1, memo);
-			char matchedLetter = rStr.charAt(r);
-			addLetter(matchedLetter, result);
-			return result;
+		if (rStr.charAt(r-1) == cStr.charAt(c-1)) {
+			char matchedLetter = rStr.charAt(r-1);
+			return addLetter(matchedLetter, collectSolution(rStr, r-1, cStr, c-1, memo));
 		}
 		// Recursive Case 2: Mismatched Letters --> Cell to left >= cell above
+		Set<String> result = new HashSet<String>();
 		if (memo[r][c-1] >= memo[r-1][c]) {
 			result.addAll(collectSolution(rStr, r, cStr, c-1, memo));
 			
 		}
 		// Recursive Case 3: Mismatched Letters --> Cell above >= cell to left
 		if (memo[r-1][c] >= memo[r][c-1]) {
-			result.addAll(collectSolution(rStr, r, cStr, c-1, memo));
+			result.addAll(collectSolution(rStr, r - 1, cStr, c, memo));
 		}
 		return result;
 	}
 
-	// [!] TODO: NEED TO COMPLETE | decides if to use BU or TD
-	private static Set<String> executeLCS(boolean topDown, int[][] table) {
-		// if true --> top down
+	// [!] TODO: Make sure memoCheck is being used properly
+	private static Set<String> executeLCS(boolean topDown, String rStr, String cStr) {
+		Set<String> solution = new HashSet<String>();
+		int rLen = rStr.length();
+		int cLen = cStr.length();
+		int[][] memo = new int[rLen+1][cLen+1];
 		if (topDown) {
-			// topDownFill();
+			boolean[][] graveyard = new boolean[rLen+1][cLen+1];
+			topDownFillTable(rStr, rLen, cStr, cLen, memo, graveyard);
+			solution = collectSolution(rStr, rLen, cStr, cLen, memo);
 		} else {
-			// bottomUpFill();
-			// collectSolution();
+			memo = bottomUpFillTable(rStr, cStr);
+			solution = collectSolution(rStr, rLen, cStr, cLen, memo);
 		}
-		throw new UnsupportedOperationException();
-		// fill the table either bottom-up or top-down
-		// use answer retrieval helper -- collectSolution
+		memoCheck = memo;
+		return solution;
 	}
 	
-	// [!] TODO: COMPLETE AS OF NOW | getSolution helper and call it in executeLCS, addLetter helper	
-	private Set<String> addLetter(char letter, Set<String> currentResults) {
+	private static Set<String> addLetter(char letter, Set<String> currentResults) {
 		Set<String> withAddedLetter = new HashSet<String>();
 		for (String s : currentResults) {
 			withAddedLetter.add(s + Character.toString(letter));
@@ -87,31 +85,22 @@ public class LCS {
 	 *         sets memoCheck to refer to table
 	 */
 	
-	// [!] TODO: NEED TO COMPLETE 
-	public static Set<String> bottomUpLCS(String rStr, String cStr) {
-		executeLCS(false, memoCheck);
-		throw new UnsupportedOperationException();
+	public static Set<String> bottomUpLCS(String rStr, String cStr) {	
+		return executeLCS(false, rStr, cStr);
 	}
 
-	// [!] TODO: Add any bottom-up specific helpers here!
-
-	// [!] TODO: COMPLETE AS OF NOW | populates memoization table [Done for now]
 	private static int[][] bottomUpFillTable(String rStr, String cStr) {
-
-		int[][] table = new int[rStr.length()][cStr.length()];
-
-		for (int row = 0; row < rStr.length(); row++) {
-			for (int col = 0; col < cStr.length(); col++) {
-				// Case 1: Mismatched letters
-				if (rStr.charAt(row) != cStr.charAt(col)) {
-					table[row][col] = Math.max((table[row - 1][col]), (table[row][col - 1]));
+		int[][] table = new int[rStr.length()+1][cStr.length()+1];
+		
+		for(int row = 1; row < rStr.length() + 1; row++) {
+			for(int col = 1; col < cStr.length() + 1; col++) {
+				if (rStr.charAt(row-1) == cStr.charAt(col-1)) {
+					table[row][col] = 1 + table[row-1][col-1];
 				} else {
-					// Case 2: Matched letters
-					table[row][col] = 1 + table[row - 1][col - 1];
+					table[row][col] = Math.max(table[row-1][col], table[row][col-1]);
 				}
 			}
 		}
-		memoCheck = table;
 		return table;
 	}
 
@@ -130,19 +119,26 @@ public class LCS {
 	 *         sets memoCheck to refer to table
 	 */
 	
-	// [!] TODO: NEED TO COMPLETE 
 	public static Set<String> topDownLCS(String rStr, String cStr) {
-		// one line call executeLCS
-		throw new UnsupportedOperationException();
+		return executeLCS(true, rStr, cStr);
 	}
 
-	// [!] TODO: Add any top-down specific helpers here!
-
-	// [!] TODO: NEED TO COMPLETE | Populates memoization table
-	private int[][] topDownFillTable(String rStr, int r, String cStr, int c, int[][] table) {
-		// memoize this with 2D boolean array
-		table = new int[rStr.length()][cStr.length()];
-		throw new UnsupportedOperationException();
+	private static int topDownFillTable(String rStr, int r, String cStr, int c, int[][] memo, boolean[][] graveyard) {
+		
+		if (r == 0 || c == 0) {
+			return 0;
+		}
+		if (graveyard[r][c] == true) {
+			return memo[r][c];
+		} else if (rStr.charAt(r-1) == cStr.charAt(c-1)) {
+			graveyard[r][c] = true;
+			memo[r][c] = 1 + topDownFillTable(rStr, r-1, cStr, c-1, memo, graveyard);
+			return memo[r][c];
+		} else {
+			memo[r][c] = Math.max(topDownFillTable(rStr, r-1, cStr, c, memo ,graveyard), 
+					topDownFillTable(rStr, r, cStr, c-1, memo, graveyard));
+			graveyard[r][c] = true;
+			return memo[r][c];
+		}
 	}
-
 }
