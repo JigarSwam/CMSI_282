@@ -1,6 +1,9 @@
+// Jigar Swaminarayan
 package huffman;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 /**
  * Huffman instances provide reusable Huffman Encoding Maps for
@@ -27,6 +30,42 @@ public class Huffman {
      */
     Huffman (String corpus) {
         // TODO!
+    	PriorityQueue<HuffNode> probabilities = new PriorityQueue<>();
+    	HashMap<Character, Integer> frequencies = new HashMap<>();
+    	int length = corpus.length();
+    	
+    	// Step 1: Retrieve frequencies of letters in corpus
+    	for (int i = 0; i < length; i++) {
+    		int count;
+    		if (!frequencies.containsKey(corpus.charAt(i))) {
+    			frequencies.put(corpus.charAt(i), 1);
+    		} else if (frequencies.containsKey(corpus.charAt(i))) {
+    			count = frequencies.get(corpus.charAt(i)) + 1;
+    			frequencies.replace(corpus.charAt(i), count);
+    		}
+    	}
+    	// Step 2: Make nodes then add to priority queue
+    	for (Map.Entry<Character, Integer> entry : frequencies.entrySet()) {
+    		HuffNode node = new HuffNode(entry.getKey(), entry.getValue());
+    		probabilities.add(node);
+    	}
+    	
+    	// Step 3: Construct Huffman Trie
+    	while (probabilities.size() > 1) {
+    		// Remove two smallest
+    		HuffNode child1 = probabilities.poll();
+    		HuffNode child2 = probabilities.poll();
+    		// Create new parent w/ summed probabilities of children --> Create new HuffNode w/ Null(?) char and summed prob
+    		HuffNode newParent = new HuffNode('/', child1.count + child2.count);
+    		// Enqueue new parent -- Add it to PriorityQueue(?)
+    		probabilities.add(newParent);		
+    	}
+    	// Last node in PriorityQueue (probabilities) is root
+    	trieRoot = probabilities.poll();
+    	
+    	// Step 4: Create Encoding Map --> DFS starting with trieRoot
+    	createEncodingMap(trieRoot, "");
+    	
     }
     
     
@@ -46,6 +85,8 @@ public class Huffman {
      *         0-padding on the final byte.
      */
     public byte[] compress (String message) {
+    	byte charCount = 0; // Equals amount of characters in encodingMap
+    	
         throw new UnsupportedOperationException();
     }
     
@@ -73,6 +114,20 @@ public class Huffman {
     // -----------------------------------------------
     // Huffman Trie
     // -----------------------------------------------
+    
+
+    public void createEncodingMap(HuffNode node, String encoding) {
+    	if (node.isLeaf()) {
+    		encodingMap.put(node.character, encoding);
+    	}
+    	if (node.left != null) {
+    		createEncodingMap(node.left, encoding + "0");
+    	}
+    	if (node.right != null) {
+    		createEncodingMap(node.right, encoding + "1");
+    	}
+
+    }
     
     /**
      * Huffman Trie Node class used in construction of the Huffman Trie.
