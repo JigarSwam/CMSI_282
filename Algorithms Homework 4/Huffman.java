@@ -2,8 +2,11 @@
 package huffman;
 
 import java.util.HashMap;
+
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.io.ByteArrayOutputStream;
+import java.util.*;
 
 /**
  * Huffman instances provide reusable Huffman Encoding Maps for
@@ -29,7 +32,6 @@ public class Huffman {
      *        differ.
      */
     Huffman (String corpus) {
-        // TODO!
     	PriorityQueue<HuffNode> probabilities = new PriorityQueue<>();
     	HashMap<Character, Integer> frequencies = new HashMap<>();
     	int length = corpus.length();
@@ -55,15 +57,18 @@ public class Huffman {
     		// Remove two smallest
     		HuffNode child1 = probabilities.poll();
     		HuffNode child2 = probabilities.poll();
-    		// Create new parent w/ summed probabilities of children --> Create new HuffNode w/ Null(?) char and summed prob
-    		HuffNode newParent = new HuffNode('/', child1.count + child2.count);
+    		// Create new parent w/ summed probabilities of children --> Create new HuffNode summed probability
+    		HuffNode newParent = new HuffNode('\0', child1.count + child2.count);
     		// Enqueue new parent -- Add it to PriorityQueue(?)
+    		newParent.left = child1;
+    		newParent.right = child2;
     		probabilities.add(newParent);		
     	}
     	// Last node in PriorityQueue (probabilities) is root
     	trieRoot = probabilities.poll();
-    	
     	// Step 4: Create Encoding Map --> DFS starting with trieRoot
+    	
+    	encodingMap = new HashMap<Character, String>();
     	createEncodingMap(trieRoot, "");
     	
     }
@@ -84,10 +89,37 @@ public class Huffman {
      *         (2) the bitstring containing the message itself, (3) possible
      *         0-padding on the final byte.
      */
+    
+    // TODO[!]
     public byte[] compress (String message) {
-    	byte charCount = 0; // Equals amount of characters in encodingMap
     	
-        throw new UnsupportedOperationException();
+    	new Huffman(message);
+    	String resultString = "";
+    	
+    	for (int i = 0; i < message.length(); i++) {
+    		if (encodingMap.containsKey(message.charAt(i))) {
+    			resultString += encodingMap.get(message.charAt(i));
+    		}
+    	}
+    	
+    	while (resultString.length() % 8 != 0) {
+    		resultString += "0";
+    	}
+    	
+    	byte[] answer = new byte[(resultString.length() / 8) + 1];
+    	byte numberOfCharacters = (byte) message.length();
+    	answer[0] = numberOfCharacters;
+    	
+    	int byteVal = 0;
+    	int indexLead = 0;
+    	int bitIndex = 1;
+    	for (int i = 7; i < resultString.length(); i+=8) {
+    		byteVal = Integer.parseInt(resultString.substring(indexLead, i+1), 2);
+    		answer[bitIndex] = (byte) byteVal;
+    		indexLead = i;
+    		bitIndex++;
+    	}
+    	return answer;
     }
     
     
@@ -106,8 +138,30 @@ public class Huffman {
      *        0-padding on the final byte.
      * @return Decompressed String representation of the compressed bytecode message.
      */
+    
     public String decompress (byte[] compressedMsg) {
-        throw new UnsupportedOperationException();
+    	
+    	String binaryRep = "";
+
+    	for (int i = 1; i < compressedMsg.length; i++) {
+    		String temp = Integer.toBinaryString(compressedMsg[i]);
+    		if (temp.length() > 8) {
+    			temp = temp.substring(temp.length()-8, temp.length());
+    		}
+    		if (temp.length() < 8) {
+    			temp = "0" + temp;
+    		}
+    		binaryRep += temp;
+
+    	}
+    	System.out.println("binaryRep: " + binaryRep);
+
+    	String result = "";
+
+    	if (compressedMsg.length > 1) {
+        	result += decompHelper(trieRoot, binaryRep, "", compressedMsg[0]);
+    	}
+    	return result;
     }
     
     
@@ -115,7 +169,7 @@ public class Huffman {
     // Huffman Trie
     // -----------------------------------------------
     
-
+    // Helper to construct Encoding Map
     public void createEncodingMap(HuffNode node, String encoding) {
     	if (node.isLeaf()) {
     		encodingMap.put(node.character, encoding);
@@ -127,6 +181,24 @@ public class Huffman {
     		createEncodingMap(node.right, encoding + "1");
     	}
 
+    }
+    
+    // Helper to decode byte array
+    public String decompHelper(HuffNode node, String binaryRep, String result, int length) {
+
+    	if(node.isLeaf()) {
+    		result += node.character;
+    		node = trieRoot;
+    	}
+    	
+    	if(result.length() == length || binaryRep.length() == 0) {
+    		return result;
+    	}
+    	if (binaryRep.charAt(0) == '0') {
+			return decompHelper(node.left, binaryRep.substring(1, binaryRep.length()), result, length);
+		} else {
+			return decompHelper(node.right, binaryRep.substring(1, binaryRep.length()), result, length);
+		}
     }
     
     /**
