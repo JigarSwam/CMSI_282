@@ -90,7 +90,6 @@ public class Huffman {
      *         0-padding on the final byte.
      */
     
-    // TODO[!]
     public byte[] compress (String message) {
     	
     	new Huffman(message);
@@ -154,8 +153,6 @@ public class Huffman {
     		binaryRep += temp;
 
     	}
-    	System.out.println("binaryRep: " + binaryRep);
-
     	String result = "";
 
     	if (compressedMsg.length > 1) {
